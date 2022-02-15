@@ -68,7 +68,7 @@ def niceExitList(state):
   currentRoom = state["currentRoom"]
   roomExits = state["caveMap"][currentRoom]
   numExits = len(roomExits)
-  if numExits == 0:
+  if numExits == 0 and state["alive"]:
     state["alive"] = False
     return "You are trapped! This room has no exits and you have starved"
   if numExits == 1:
