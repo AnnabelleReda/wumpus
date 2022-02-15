@@ -15,7 +15,7 @@ gameState = {
     1:[3, 4, 2],
     2:[1, 4, 5, 7],
     3:[1, 4, 9],
-    4:[1, 2, 3, 11, 8, 7],
+    4:[1, 2, 3, 8],
     5:[2],
     6:[7],
     7:[6, 8, 4, 2],
@@ -92,12 +92,22 @@ def move(state):
     return
   state["currentRoom"] = nextRoom
 
+def encounter(state):
+  if state["currentRoom"] == state["wumpusRoom"]:
+    if state["wumpusState"]==WumpusState.ASLEEP:
+      print("you have woken the wumpus!")
+      state["wumpusState"]== WumpusState.AWAKE
+    else:
+      print("you have been eaten by a wumpus")
+      state ["alive"]= False
+
 newGame(gameState)
 print("Hunt the Wumpus")
 print()
 while gameState["alive"]:
   print("hint: The wumpus is in room {wumpusRoom}".format_map(gameState))
   look(gameState)
+  encounter(gameState)
   if not gameState["alive"]:
     break
   nextAction = input("\nWhat's next? ")
