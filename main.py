@@ -10,14 +10,15 @@ gameState = {
   "alive": True,
   "wumpusState":WumpusState.ASLEEP,
   "wumpusRoom": 1,
+  "startledChance": 0.25,
   "currentRoom": 1,
   "caveMap": {
     1:[3, 4, 2],
     2:[1, 4, 5, 7],
     3:[1, 4, 9],
     4:[1, 2, 3, 8],
-    5:[2],
-    6:[7],
+    5:[2, 3],
+    6:[7, 15],
     7:[6, 8, 4, 2],
     8:[4, 7,],
     9:[10, 12, 13, 3,],
@@ -96,7 +97,15 @@ def encounter(state):
   if state["currentRoom"] == state["wumpusRoom"]:
     if state["wumpusState"]==WumpusState.ASLEEP:
       print("you have woken the wumpus!")
-      state["wumpusState"]== WumpusState.AWAKE
+      state["wumpusState"]= WumpusState.AWAKE
+      if(random.random() < state["startleChance"]):
+        roomExits = state["caveMap"][state["currentRoom"]]
+        if len (roomExits) == 0:
+          print("you have startled it, but this room has no exits")
+        else:
+          print("Lucky for you you scared the wumpus and it rean out an exit")
+          state["wumpusRoom"] = random.choice(roomExits)
+
     else:
       print("you have been eaten by a wumpus")
       state ["alive"]= False
