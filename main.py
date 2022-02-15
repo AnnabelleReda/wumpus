@@ -10,7 +10,7 @@ gameState = {
   "alive": True,
   "wumpusState":WumpusState.ASLEEP,
   "wumpusRoom": 1,
-  "startledChance": 0.25,
+  "startleChance": 0.25,
   "currentRoom": 1,
   "caveMap": {
     1:[3, 4, 2],
@@ -77,38 +77,36 @@ def look(state):
   print(f"You are in room {currentRoom}")
   if currentRoom == state["wumpusRoom"]:
     if state["wumpusState"] == WumpusState.ASLEEP:
-      print("you see a sleeping wumpus")
+      print("you see a sleeping Ceceilia")
     else:
-      print("you see a wumpus looking back at you")
+      print("you see a ceceilia looking back at you")
   print(niceExitList(state))
 
 def move(state):
   currentRoom = state["currentRoom"]
-  nextRoom = int(input("where would you like to go? "))
+  nextRoom = int(input("whats your next move? "))
   if nextRoom not in state["caveMap"][currentRoom]:
-    print(f"I'm sorry, you cannot get to room {nextRoom} from here.")
+    print(f"dumb whore, you cannot get to room {nextRoom} from here.")
     return
   if nextRoom not in state["caveMap"]:
-    print(f"Oh no! Room {nextRoom} doesn't even exist!")
+    print(f"Bitch! Room {nextRoom} doesn't even exist!")
     return
   state["currentRoom"] = nextRoom
 
 def encounter(state):
-  if state["currentRoom"] == state["wumpusRoom"]:
-    if state["wumpusState"]==WumpusState.ASLEEP:
-      print("you have woken the wumpus!")
-      state["wumpusState"]= WumpusState.AWAKE
-      if(random.random() < state["startleChance"]):
-        roomExits = state["caveMap"][state["currentRoom"]]
-        if len (roomExits) == 0:
-          print("you have startled it, but this room has no exits")
-        else:
-          print("Lucky for you you scared the wumpus and it rean out an exit")
-          state["wumpusRoom"] = random.choice(roomExits)
-
-    else:
-      print("you have been eaten by a wumpus")
-      state ["alive"]= False
+  if state["currentRoom"] == state["wumpusRoom"]and state["wumpusState"] == WumpusState.ASLEEP:
+    print("you have woken the Ceceilia!")
+    state["wumpusState"]= WumpusState.AWAKE
+    if(random.random() < state["startleChance"]):
+      roomExits = state["caveMap"][state["currentRoom"]]
+      if len (roomExits) == 0:
+        print("you have startled the bussy, but this room has no exits")
+      else:
+        print("Lucky for you you scared the Ceceila and it scrambled out through an exit")
+        state["wumpusRoom"] = random.choice(roomExits)
+  if state["currentRoom"] == state["wumpusRoom"] and state ["wumpusState"] == WumpusState.AWAKE:
+    print("you have been eaten by Ceceila")
+    state ["alive"]= False
 
 newGame(gameState)
 print("Hunt the Wumpus")
@@ -125,5 +123,5 @@ while gameState["alive"]:
     continue
   if nextAction.lower()[0] == "q":
     break
-  print(f"I'm sorry, I don't know how to do '{nextAction}'.")
+  print(f"dumbass, I can't do that, follow the instructions '{nextAction}'.")
   print("I know how to quit.")
