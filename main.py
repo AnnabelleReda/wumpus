@@ -11,6 +11,8 @@ gameState = {
   "wumpusState":WumpusState.ASLEEP,
   "wumpusRoom": 1,
   "startleChance": 0.25,
+  "sleepChance": 0.25,
+  "bazookas": 4,
   "currentRoom": 1,
   "caveMap": {
     1:[3, 4, 2],
@@ -22,7 +24,7 @@ gameState = {
     7:[6, 8, 4, 2],
     8:[4, 7,],
     9:[10, 12, 13, 3,],
-    10:[9],
+    10:[9, 1],
     11:[4, 13, 14],
     12:[9, 13],
     13:[12, 9, 11, 14],
@@ -55,6 +57,13 @@ def newGame (state) :
     state["currentRoom"] = safeRandomRoom(state)
   return
 
+def niceArrowList(numArrows):
+  if numArrows == 0:
+    return "you suck and wasted your rounds"
+  if numArrows ==1:
+    return "you're down to your last bullet"
+  return f"you have {numArrows} bullets left"
+
 def niceExitList(state):
   currentRoom = state["currentRoom"]
   roomExits = state["caveMap"][currentRoom]
@@ -72,14 +81,18 @@ def niceExitList(state):
   niceList += f"and {roomExits[-1]}."
   return niceList
 
-def look(state):
+def sense(state):
   currentRoom = state["currentRoom"]
   print(f"You are in room {currentRoom}")
+  print(niceArrowList(state["bazookas"]))
   if currentRoom == state["wumpusRoom"]:
     if state["wumpusState"] == WumpusState.ASLEEP:
       print("you see a sleeping Ceceilia")
     else:
       print("you see a ceceilia looking back at you")
+  for exitNumber in state["caveMap"][state["currentRoom"]]:
+    if state["wumpusRoom"] == exitNumber:
+      print("you sense cecilia's vibe")
   print(niceExitList(state))
 
 def move(state):
@@ -107,13 +120,24 @@ def encounter(state):
   if state["currentRoom"] == state["wumpusRoom"] and state ["wumpusState"] == WumpusState.AWAKE:
     print("you have been eaten by Ceceila")
     state ["alive"]= False
+  
+def updateHazards(state):
+  if state["wumpusState"]== WumpusState.AWAKE:
+    roomExits = state["caveMap"][state["currentRoom"]]
+    if random.random() < state["sleepChance"]:
+      print ("hint: the ceceilia has fallen asleep") 
+      state["wumpusState"] = WumpusState.ASLEEPm
+    elif len(roomExits) > 0:
+     state["wumpusRoom"] = random.choice(roomExits)
+
 
 newGame(gameState)
 print("Hunt the Wumpus")
 print()
 while gameState["alive"]:
-  print("hint: The wumpus is in room {wumpusRoom}".format_map(gameState))
-  look(gameState)
+  updateHazards(gameState)
+  print("hint: The Ceceilia is in room {wumpusRoom}".format_map(gameState))
+  sense(gameState)
   encounter(gameState)
   if not gameState["alive"]:
     break
@@ -124,4 +148,4 @@ while gameState["alive"]:
   if nextAction.lower()[0] == "q":
     break
   print(f"dumbass, I can't do that, follow the instructions '{nextAction}'.")
-  print("I know how to quit.")
+  print("type 'q' to kill yourself")
